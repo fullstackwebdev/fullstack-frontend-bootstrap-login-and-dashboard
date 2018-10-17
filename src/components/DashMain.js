@@ -3,6 +3,7 @@ import { Button, Container, Row, Col, ButtonGroup, ButtonToolbar, Table } from '
 import { Link } from 'react-router-dom';
 import { Calendar } from 'react-feather';
 import { Line } from 'react-chartjs';
+import PrivateRoute from './PrivateRoute.js';
 /*
  <!-- Graphs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
@@ -80,6 +81,8 @@ export default class DashMain extends Component {
             }
         }
         return (
+            <>    
+            <PrivateRoute />
             <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
                 <DashMainTitle />
 
@@ -214,6 +217,7 @@ export default class DashMain extends Component {
 
                 </Table>
             </main >
+            </>
         )
     }
 }

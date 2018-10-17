@@ -1,25 +1,8 @@
 import React, { Component } from 'react';
 import { Button, Form, Image } from 'react-bootstrap';
-//import { styles } from './login.css';
-import './login.css';
 import { AUTH_TOKEN } from '../constants';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import styled from 'styled-components';
-import { Helmet } from 'react-helmet';
-import { createGlobalStyle } from 'styled-components'
-
-
-
-const GlobalStyle = createGlobalStyle`
-display: flexbox;
-display: flex;
--ms-flex-align: center;
-align-items: center;
-padding-top: 40px;
-padding-bottom: 40px;
-background-color: #f5f5f5;
-`
 
 ////
 const SIGNUP_MUTATION = gql`
@@ -30,39 +13,17 @@ const SIGNUP_MUTATION = gql`
   }
 `
 
-const LOGIN_MUTATION = gql`
-  mutation LoginMutation($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      token
-    }
-  }
-`
 ////
-export default class Login extends Component {
+export default class SignUp extends Component {
     state = {
-        login: true, // switch between Login and SignUp
         email: '',
         password: '',
         name: '',
         error: ''
     }
 
-    componentWillMount() {
-        //document.body.classList.add("text-center");
-        //document.body.classList.add("mybody")
-        // .mybody {
-        //     display: -ms - flexbox;
-        //     display: flex;
-        //     -ms - flex - align: center;
-        //     align - items: center;
-        //     padding - top: 40px;
-        //     padding - bottom: 40px;
-        //     background - color: #f5f5f5;
-        // }
-    }
-
     _confirm = async data => {
-        const { token } = this.state.login ? data.login : data.signup
+        const { token } = data.signup
         this._saveUserData(token)
         this.props.history.push(`/`)
         console.log('sent browser to /');
@@ -75,7 +36,7 @@ export default class Login extends Component {
 
     _error = data => {
         console.log(data.graphQLErrors[0].message);
-        this.setState({error: data.graphQLErrors[0].message });
+        this.setState({ error: data.graphQLErrors[0].message });
     }
 
     render() {
@@ -84,18 +45,23 @@ export default class Login extends Component {
 
         return (
             <React.Fragment>
-                <Helmet>
+                {/* <Helmet>
                     <body className="mybody"></body>
-                </Helmet>
+                </Helmet> */}
                 <Form className="form-signin">
                     <Image className="mb-4"
                         src="bootstrap-solid.svg" alt="" width="72" height="72" />
-                    <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
+                    <h1 className="h3 mb-3 font-weight-normal">Sign up</h1>
                     <Form.Group>
                         <Form.Label className="sr-only">Email address</Form.Label>
-
-
-                        {/* ///// */}
+                        <Form.Control
+                            value={name}
+                            onChange={e => this.setState({ name: e.target.value })}
+                            type="text"
+                            id="inputName"
+                            placeholder="Your name"
+                            required autoFocus
+                        />
                         <Form.Control
                             value={email}
                             onChange={e => this.setState({ email: e.target.value })}
@@ -104,8 +70,6 @@ export default class Login extends Component {
                             placeholder="Email Address"
                             required autoFocus
                         />
-                        {/* ///// */}
-
                         <Form.Label className="sr-only">Password</Form.Label>
                         <Form.Control
                             value={password}
@@ -117,14 +81,9 @@ export default class Login extends Component {
                             required
                         />
                         {error && <h1>error {this.state.error}</h1>}
-                        <div className="checkbox mb-3">
-                            <label>
-                                <input type="checkbox" value="remember-me" /> Remember me
-                            {/* <Form.Check value="remember-me" /> Remember me */}
-                            </label>
-                        </div>
+
                         <Mutation
-                            mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
+                            mutation={SIGNUP_MUTATION}
                             variables={{ email, password, name }}
                             onCompleted={data => this._confirm(data)}
                             onError={data => this._error(data)}
@@ -134,10 +93,7 @@ export default class Login extends Component {
                                     variety="primary"
                                     block size="lg"
                                     onClick={mutation}
-                                > {login ? 'login' : 'create account'} </Button>
-                                // <div className="pointer mr2 button" onClick={mutation}>
-                                //     {login ? 'login' : 'create account'}
-                                // </div>
+                                > Create account </Button>
                             )}
                         </Mutation>
                     </Form.Group>
